@@ -1,0 +1,18 @@
+KCPAC 0.2
+by utz
+
+
+kcpac converts z80 binary files to .kcc files, the native format used
+on HC900 and KC85/2-4 computers.
+
+
+Usage:
+kcpac.pl <filename> <start address> [<autorun address>]
+
+FILENAME is the name of the z80 .bin file to convert
+START ADDRESS is the address where to load the binary in RAM.
+AUTORUN ADDRESS is the address to be executed after loading. If no
+argument is given, the first address after the header will be used.
+
+All address arguments are to be supplied in hexadecimal notation,
+without any prefix or prefixed with 0x.

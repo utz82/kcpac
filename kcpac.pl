@@ -26,7 +26,7 @@ my $startaddr = hex($ARGV[1]);
 my $binsize = -s $infile;
 my $endaddr = $startaddr + $binsize + 1;
 
-my $execaddr = $startaddr;		#for now, auto-run address = start address
+my $execaddr = $startaddr;		#for now, auto-run address = start address + header
 
 #check if binfile is present, and open it if it is
 if ( -e $infile ) {
@@ -36,6 +36,28 @@ if ( -e $infile ) {
 else {
 	print "ERROR: $infile not found.\n";
 	exit 1;
+}
+
+#check header of binfile
+my $header = "no";
+my $execcounter = 0;
+my $byte = 0xff;
+
+sysseek(INFILE, $execcounter, 0) or die $!;	#read header
+sysread(INFILE, $byte, 1) == 1 or die $!;
+$byte = ord($byte);
+
+if ($byte == 0x7f) {
+	$header = "yes";
+	$execcounter++;				#skip 2nd byte
+	while ($byte >= 2) {			#header ends with 0 or 1
+		$execcounter++;
+		sysseek(INFILE, $execcounter, 0) or die $!;
+		sysread(INFILE, $byte, 1) == 1 or die $!;
+		$byte = ord($byte);
+		print "$byte\n";	
+	}
+	$execaddr = $execaddr + $execcounter + 1;
 }
 
 #delete outfile if it exists
@@ -62,6 +84,7 @@ while (							#copy binfile
 
 #print info
 print "program name:\t$progname.COM\n";
+print "header found:\t$header\n";
 print "start address:\t";
 printf ("%#x", $startaddr);
 print "\nend address:\t";
