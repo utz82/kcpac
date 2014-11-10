@@ -60,6 +60,10 @@ if ($byte == 0x7f) {
 	$execaddr = $execaddr + $execcounter + 1;
 }
 
+close INFILE;
+open INFILE, $infile or die "ERROR: Could not open $infile: $!";
+binmode INFILE;
+
 #delete outfile if it exists
 unlink $outfile if ( -e $outfile );
 
