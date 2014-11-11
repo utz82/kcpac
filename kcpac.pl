@@ -54,8 +54,7 @@ if ($byte == 0x7f) {
 		$execcounter++;
 		sysseek(INFILE, $execcounter, 0) or die $!;
 		sysread(INFILE, $byte, 1) == 1 or die $!;
-		$byte = ord($byte);
-		print "$byte\n";	
+		$byte = ord($byte);	
 	}
 	$execaddr = $execaddr + $execcounter + 1;
 }
